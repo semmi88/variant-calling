@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/semmi88/variant-calling/main/nextflow_schema.json",
+  "title": "semmi88/variant-calling pipeline parameters",
+  "description": "Index BAM files and call variants with GATK HaplotypeCaller",
+  "type": "object",
+  "$defs": {
+    "input_output_options": {
+      "title": "Input/output options",
+      "type": "object",
+      "fa_icon": "fas fa-terminal",
+      "required": ["data_dir"],
+      "properties": {
+        "data_dir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Base directory. Input and output paths below are resolved relative to it.",
+          "help_text": "e.g. `s3://my-bucket/variant-calling`",
+          "fa_icon": "fas fa-folder-open"
+        },
+        "bam_glob": {
+          "type": "string",
+          "default": "data/bam/*.bam",
+          "description": "Glob pattern for input BAM files, relative to `data_dir` (or an absolute path/URI).",
+          "fa_icon": "fas fa-file"
+        },
+        "output_suffix": {
+          "type": "string",
+          "default": "results",
+          "description": "Output folder, relative to `data_dir`.",
+          "fa_icon": "fas fa-folder-open"
+        }
+      }
+    },
+    "reference_options": {
+      "title": "Reference options",
+      "type": "object",
+      "fa_icon": "fas fa-dna",
+      "description": "Reference files, relative to `data_dir` (or absolute paths/URIs).",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "default": "data/ref/ref.fasta",
+          "pattern": "^\\S+\\.fa(sta)?$",
+          "description": "Reference genome FASTA.",
+          "fa_icon": "fas fa-dna"
+        },
+        "reference_index": {
+          "type": "string",
+          "default": "data/ref/ref.fasta.fai",
+          "pattern": "^\\S+\\.fai$",
+          "description": "FASTA index (.fai).",
+          "fa_icon": "fas fa-file"
+        },
+        "reference_dict": {
+          "type": "string",
+          "default": "data/ref/ref.dict",
+          "pattern": "^\\S+\\.dict$",
+          "description": "Sequence dictionary (.dict).",
+          "fa_icon": "fas fa-file"
+        },
+        "intervals": {
+          "type": "string",
+          "default": "data/ref/intervals.bed",
+          "pattern": "^\\S+\\.bed$",
+          "description": "BED file of intervals to call variants on.",
+          "fa_icon": "fas fa-file"
+        }
+      }
+    }
+  },
+  "allOf": [
+    { "$ref": "#/$defs/input_output_options" },
+    { "$ref": "#/$defs/reference_options" }
+  ]
+}

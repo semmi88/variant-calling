@@ -8,26 +8,29 @@ include { GATK_HAPLOTYPECALLER } from './modules/gatk_haplotypecaller.nf'
  * Pipeline parameters
  */
 params {
-    // Primary input array of files
-    input: List<Path>
+    // Base location for inputs and outputs
+    base_dir: String
 
-    // Accessory files
-    reference: Path
-    reference_index: Path
-    reference_dict: Path
-    intervals: Path
+    // Paths relative to base_dir (absolute paths / URIs are used as-is)
+    bam_glob: String        = 'data/bam/*.bam'
+    reference: String       = 'data/ref/ref.fasta'
+    reference_index: String = 'data/ref/ref.fasta.fai'
+    reference_dict: String  = 'data/ref/ref.dict'
+    intervals: String       = 'data/ref/intervals.bed'
+    output_suffix: String   = 'results'
 }
 
 workflow {
 
     main:
-    reads_ch = channel.fromPath(params.input)
+    def base = params.base_dir.replaceAll('/+$', '')
+    def resolve = { p -> (p.startsWith('/') || p.contains('://')) ? p : "${base}/${p}" }
 
-    // Load the file paths for the accessory files (reference and intervals)
-    ref_file        = file(params.reference)
-    ref_index_file  = file(params.reference_index)
-    ref_dict_file   = file(params.reference_dict)
-    intervals_file  = file(params.intervals)
+    reads_ch       = channel.fromPath(resolve.call(params.bam_glob), checkIfExists: true)
+    ref_file       = file(resolve.call(params.reference),       checkIfExists: true)
+    ref_index_file = file(resolve.call(params.reference_index), checkIfExists: true)
+    ref_dict_file  = file(resolve.call(params.reference_dict),  checkIfExists: true)
+    intervals_file = file(resolve.call(params.intervals),       checkIfExists: true)
 
     // Create index file for input BAM file
     SAMTOOLS_INDEX(reads_ch)
