@@ -9,9 +9,9 @@
       "title": "Input/output options",
       "type": "object",
       "fa_icon": "fas fa-terminal",
-      "required": ["data_dir"],
+      "required": ["base_dir"],
       "properties": {
-        "data_dir": {
+        "base_dir": {
           "type": "string",
           "format": "directory-path",
           "description": "Base directory. Input and output paths below are resolved relative to it.",
@@ -21,13 +21,13 @@
         "bam_glob": {
           "type": "string",
           "default": "data/bam/*.bam",
-          "description": "Glob pattern for input BAM files, relative to `data_dir` (or an absolute path/URI).",
+          "description": "Glob pattern for input BAM files, relative to `base_dir` (or an absolute path/URI).",
           "fa_icon": "fas fa-file"
         },
         "output_suffix": {
           "type": "string",
           "default": "results",
-          "description": "Output folder, relative to `data_dir`.",
+          "description": "Output folder, relative to `base_dir`.",
           "fa_icon": "fas fa-folder-open"
         }
       }
@@ -36,7 +36,7 @@
       "title": "Reference options",
       "type": "object",
       "fa_icon": "fas fa-dna",
-      "description": "Reference files, relative to `data_dir` (or absolute paths/URIs).",
+      "description": "Reference files, relative to `base_dir` (or absolute paths/URIs).",
       "properties": {
         "reference": {
           "type": "string",
